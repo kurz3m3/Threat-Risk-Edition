@@ -1,5 +1,7 @@
 from flask import Flask
 import probability
+import pygame
+
 app = Flask(__name__)
 
 
