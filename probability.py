@@ -59,6 +59,9 @@ print("\nPrinting WL ARRAY:")
 for row in wlArray:
     print(row)
 
+
+
+
 # made variables so i can use fstrings
 attackL = round((defendProb / totalOutcomes) * 100, 2)
 attackW = round((attackProb / totalOutcomes) * 100, 2)
