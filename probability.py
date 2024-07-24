@@ -31,41 +31,44 @@ def append_results(data_array, item):
         data_array.append([])  # Create a new row if the last row is full or if the array is empty
     data_array[-1].append(item)  # Append the new item to the last row
 
+# ------------------------------------------------------------------------------------------------
 
-wlArray = []
-defendProb = 0
-attackProb = 0
-numDice = 2
-totalOutcomes = pow(6, numDice)  # 6 to the power of how many dice we roll
-# note: 0 to 6 = 0 to 5 =  1 to 6
-for i in range(1): # this is supposed to start at 6^2 and continue to however many
-    append_results(wlArray, [])
-    for defend in range(0, 6):
-        for attack in range(0, 6):
-            if defend >= attack:
-                append_results(wlArray, "L")
-                defendProb += 1
-            else:
-                append_results(wlArray, "W")
-                attackProb += 1
+# !!!! TO-DO: RECOGNIZE WHO'S DICE IS WHOS ...
+# Currently scales as if all dice are going to attack,
+# meaning we have probabilities for: 1A 1D, 2A 1D, and 3A 1D
+# and we need: 1A 2D (max clause? change if? L23), 2A 2D, and 3A 2D (change if?)
 
-if numDice > 2:
-    attackProb = attackProb * numDice
+# number of dice in play
+attackDice = 1
+defendDice = 1
 
-# we make a new list when doing over 36 grid so that we can have [wlwlwl] [wlwlwl] [wlkwlwlwl] (each dimension in cube)
-# new total outcomes is 6^3 ... calculate the probability
-# -----------------------------------------------------------------------
-print("\nPrinting WL ARRAY:")
-for row in wlArray:
-    print(row)
+# len(faces)-sided die with each element representing the face's val
+faces = [1, 2, 3, 4, 5, 6]
 
+print(21 / 36)  # ... 15/36 = Ap ... control probability of DEF win w/ 2 dice
+print(91 / 216)  # ... 125/216 = Ap ... control probability of DEF win w/ 3 dice (2A - 1D)
+print(449 / 1296)  # ... 847/1296 = Ap ... control probability of DEF win w/ 4 dice (3A - 1D)
 
+def dicePair(attDice, defDice, die):
+    # calc
+    numDice = attDice + defDice
+    outcomes = 0
+    for row in range(len(die)):
+        # insert more def clause
+        if numDice <= 2:
+            for col in range(len(die)):
+                if col <= row:
+                    outcomes += 1
+        elif numDice > 2:
+            # scales the initial probability to an increased # of dice
+            # formula to find DEF probability (RELIABLE)
+            outcomes += pow(row + 1, numDice - 1)
 
+    # total possible roll combos for any # of dice
+    total = pow(len(die), numDice)
 
-# made variables so i can use fstrings
-attackL = round((defendProb / totalOutcomes) * 100, 2)
-attackW = round((attackProb / totalOutcomes) * 100, 2)
+    # defender win prob, attacker win prob (as percentages)
+    return(f"DEF Win Probability ({defDice} Dice): {round((outcomes / total) * 100, 2)}%",
+           f"ATT Win Probability ({attDice} Dice): {round(((total - outcomes) / total) * 100, 2)}%")
 
-print("These are the probabilities that someone wins with 1 dice on each side: ")
-print("Attack Loss: ", f"{attackL}%")
-print("Attack Win: ", f"{attackW}%")
+print(dicePair(attackDice, defendDice, faces))
