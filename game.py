@@ -74,7 +74,7 @@ attackingList = OptionBox(
     40, 40, 200, 40, (150, 150, 150), (100, 200, 255), pygame.font.SysFont(None, 30),
     ["Attacking Army #", "1", "2", "3"])
 defendingList = OptionBox(
-    1000, 40, 200, 40, (150, 150, 150), (100, 200, 255), pygame.font.SysFont(None, 30),
+    screen.get_width() - 250, 40, 200, 40, (150, 150, 150), (100, 200, 255), pygame.font.SysFont(None, 30),
     ["Defending Army #", "1", "2"])
 while running:
     # poll for events
