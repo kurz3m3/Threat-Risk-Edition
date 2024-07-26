@@ -6,10 +6,10 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 dt = 0
-
 pygame.display.set_caption('Threat: Risk Edition')
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+
 
 while running:
     # poll for events
@@ -20,7 +20,10 @@ while running:
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("aquamarine")
-
+    country_one = pygame.image.load('Assets/ColombiaImage.png')
+    screen.blit(country_one, (0, 100))
+    country_two = pygame.image.load('Assets/GhanaImage.png')
+    screen.blit(country_two, (500, 100))
     pygame.draw.circle(screen, "red", player_pos, 40)
 
     keys = pygame.key.get_pressed()
