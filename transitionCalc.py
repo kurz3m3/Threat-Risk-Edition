@@ -2,16 +2,15 @@ import numpy as np
 import itertools
 
 
-def generate_dice_combinations(n, die):
+def generate_dice_combinations(n):
+    # Initialize the die faces
+    die = [1, 2, 3, 4, 5, 6]
     # Generate all combinations of `n` dice rolls
     return list(itertools.product(die, repeat=n))
 
 
-# Initialize the die faces
-die = [1, 2, 3, 4, 5, 6]
-
 # Generate all possible combinations of four dice rolls
-combinations = generate_dice_combinations(5, die)
+combinations = generate_dice_combinations(5)
 
 # Initialize counters
 team_A_wins = 0
