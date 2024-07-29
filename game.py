@@ -9,6 +9,10 @@ dt = 0
 # window title
 pygame.display.set_caption('Threat: Risk Edition')
 
+# Setting up font and size
+font_size = 40
+font = pygame.font.Font(None, font_size)  # None uses the default font
+
 # ball position
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
@@ -69,7 +73,6 @@ class OptionBox():
                     return self.active_option
         return -1
 
-
 attackingList = OptionBox(
     40, 40, 200, 40, (150, 150, 150), (100, 200, 255), pygame.font.SysFont(None, 30),
     ["Attacking Army #", "1", "2", "3"])
@@ -98,6 +101,13 @@ while running:
     defend_selected_option = defendingList.update(event_list)
     defendingList.draw(screen)
 
+    # Render the number onto a new Surface
+    attackText = font.render(attackingList.option_list[attackingList.selected], True, (255, 255, 255))  # White text
+    defendText = font.render(defendingList.option_list[defendingList.selected], True, (255, 255, 255))  # White text
+    if(attackingList.option_list[attackingList.selected] != "Attacking Army #"):
+        screen.blit(attackText, (350, 500))
+    if(defendingList.option_list[defendingList.selected] != "Defending Army #"):
+        screen.blit(defendText, (900, 500))
     pygame.draw.circle(screen, "red", player_pos, 40)
 
     keys = pygame.key.get_pressed()
