@@ -194,6 +194,7 @@ while running:
         if (button.is_clicked()):
             popup_visible = True
 
+
     close_button = None
     if popup_visible:
         close_button = display_popup()
