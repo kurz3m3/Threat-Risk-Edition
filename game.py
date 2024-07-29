@@ -13,6 +13,11 @@ pygame.display.set_caption('Threat: Risk Edition')
 font_size = 40
 font = pygame.font.Font(None, font_size)  # None uses the default font
 
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GREY = (100, 100, 100)
+LIGHT_GREY = (200, 200, 200)
+RED = (255, 0, 0)
 # ball position
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
@@ -73,6 +78,73 @@ class OptionBox():
                     return self.active_option
         return -1
 
+
+# Button class
+class Button:
+    def __init__(self, x, y, width, height, text, font, text_color, button_color, hover_color):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.text = text
+        self.font = font
+        self.text_color = text_color
+        self.button_color = button_color
+        self.hover_color = hover_color
+        self.clicked = False
+
+    def draw(self, screen):
+        # Change color on hover
+        mouse_pos = pygame.mouse.get_pos()
+        mouse_pressed = pygame.mouse.get_pressed()
+        color = self.hover_color if self.rect.collidepoint(mouse_pos) else self.button_color
+
+        if self.rect.collidepoint(mouse_pos) and mouse_pressed[0]:
+            self.clicked = True
+        else:
+            self.clicked = False
+
+        # Draw button
+        pygame.draw.rect(screen, color, self.rect)
+
+        # Render text on button
+        text_surface = self.font.render(self.text, True, self.text_color)
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        screen.blit(text_surface, text_rect)
+
+    def is_clicked(self):
+        return self.clicked
+
+
+# Function to display a pop-up
+popup_visible = False
+# Function to display a pop-up
+def display_popup():
+    popup_width = 400
+    popup_height = 200
+    popup_x = (screen.get_width() // 2) - (popup_width // 2)
+    popup_y = (screen.get_height() // 2) - (popup_height // 2)
+
+    # Draw the pop-up window
+    pygame.draw.rect(screen, GREY, (popup_x, popup_y, popup_width, popup_height))
+
+    # Render the pop-up text
+    popup_text = "The Battle Results Are:"
+    popup_text_surface = font.render(popup_text, True, BLACK)
+    popup_text_rect = popup_text_surface.get_rect(center=((screen.get_width() // 2), popup_y + 50))
+    screen.blit(popup_text_surface, popup_text_rect)
+
+    # Render the result number
+    result_number = str(1)
+    result_number_surface = font.render(result_number, True, BLACK)
+    result_number_rect = result_number_surface.get_rect(center=((screen.get_width() // 2), popup_y + 100))
+    screen.blit(result_number_surface, result_number_rect)
+
+    # Create a close button for the pops-up
+    close_button = Button(popup_x + (popup_width // 2) - 50, popup_y + popup_height - 50, 100, 30, "Close", font,
+                          BLACK, RED, LIGHT_GREY)
+    close_button.draw(screen)
+
+    return close_button
+
+
 attackingList = OptionBox(
     40, 40, 200, 40, (150, 150, 150), (100, 200, 255), pygame.font.SysFont(None, 30),
     ["Attacking Army #", "1", "2", "3"])
@@ -92,7 +164,7 @@ while running:
     country_one = pygame.image.load('Assets/ColombiaImage.png')
     screen.blit(country_one, (0, 100))
     country_two = pygame.image.load('Assets/GhanaImage.png')
-    screen.blit(country_two, (500, 100))
+    screen.blit(country_two, (550, 100))
 
     # option box draw
     attack_selected_option = attackingList.update(event_list)
@@ -104,12 +176,34 @@ while running:
     # Render the number onto a new Surface
     attackText = font.render(attackingList.option_list[attackingList.selected], True, (255, 255, 255))  # White text
     defendText = font.render(defendingList.option_list[defendingList.selected], True, (255, 255, 255))  # White text
-    if(attackingList.option_list[attackingList.selected] != "Attacking Army #"):
+    if (attackingList.option_list[attackingList.selected] != "Attacking Army #"):
         screen.blit(attackText, (350, 500))
-    if(defendingList.option_list[defendingList.selected] != "Defending Army #"):
+    if (defendingList.option_list[defendingList.selected] != "Defending Army #"):
         screen.blit(defendText, (900, 500))
-    pygame.draw.circle(screen, "red", player_pos, 40)
 
+    # Create button instance
+    button_width = 200
+    button_height = 50
+    button_x = (screen.get_width() // 2) - (button_width // 2)
+    button_y = screen.get_height() - button_height - 10
+    button = Button(button_x, button_y, button_width, button_height, "BATTLE", font, BLACK, GREY, LIGHT_GREY)
+
+    if ((attackingList.option_list[attackingList.selected] != "Attacking Army #") and (
+            defendingList.option_list[defendingList.selected] != "Defending Army #")):
+        button.draw(screen)
+        if (button.is_clicked()):
+            popup_visible = True
+
+    close_button = None
+    if popup_visible:
+        close_button = display_popup()
+        if(close_button.is_clicked()):
+            battleResult = font.render("The Battle Results Are: ", True, (255, 255, 255))
+            screen.blit(battleResult, (screen.get_width() / 3, 10))
+            popup_visible = False
+
+
+    pygame.draw.circle(screen, "red", player_pos, 40)
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         player_pos.y -= 300 * dt
