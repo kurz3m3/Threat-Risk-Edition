@@ -1,4 +1,6 @@
 import pygame
+import random
+import transitionCalc as TC
 
 # pygame setup
 pygame.init()
@@ -20,6 +22,12 @@ LIGHT_GREY = (200, 200, 200)
 RED = (255, 0, 0)
 # ball position
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+
+
+def roll_dice(num_dice):
+    die = [1, 2, 3, 4, 5, 6]
+    rolls = [random.choice(die) for _ in range(num_dice)]
+    return rolls
 
 
 # input box class
@@ -115,6 +123,8 @@ class Button:
 
 # Function to display a pop-up
 popup_visible = False
+
+
 # Function to display a pop-up
 def display_popup():
     popup_width = 400
@@ -132,7 +142,7 @@ def display_popup():
     screen.blit(popup_text_surface, popup_text_rect)
 
     # Render the result number
-    result_number = str(1)
+    result_number = str(attackingList.selected) + " and " + str(defendingList.selected)
     result_number_surface = font.render(result_number, True, BLACK)
     result_number_rect = result_number_surface.get_rect(center=((screen.get_width() // 2), popup_y + 100))
     screen.blit(result_number_surface, result_number_rect)
@@ -151,6 +161,8 @@ attackingList = OptionBox(
 defendingList = OptionBox(
     screen.get_width() - 250, 40, 200, 40, (150, 150, 150), (100, 200, 255), pygame.font.SysFont(None, 30),
     ["Defending Army #", "1", "2"])
+
+click_flag = False
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -176,9 +188,9 @@ while running:
     # Render the number onto a new Surface
     attackText = font.render(attackingList.option_list[attackingList.selected], True, (255, 255, 255))  # White text
     defendText = font.render(defendingList.option_list[defendingList.selected], True, (255, 255, 255))  # White text
-    if (attackingList.option_list[attackingList.selected] != "Attacking Army #"):
+    if attackingList.option_list[attackingList.selected] != "Attacking Army #":
         screen.blit(attackText, (350, 500))
-    if (defendingList.option_list[defendingList.selected] != "Defending Army #"):
+    if defendingList.option_list[defendingList.selected] != "Defending Army #":
         screen.blit(defendText, (900, 500))
 
     # Create button instance
@@ -191,18 +203,32 @@ while running:
     if ((attackingList.option_list[attackingList.selected] != "Attacking Army #") and (
             defendingList.option_list[defendingList.selected] != "Defending Army #")):
         button.draw(screen)
-        if (button.is_clicked()):
+        if button.is_clicked() and not click_flag:
+            click_flag = True
             popup_visible = True
+            attackOption = attackingList.option_list[attackingList.selected]
+            defenseOption = defendingList.option_list[defendingList.selected]
+            battleOutcome = TC.determine_outcomes(int(attackOption),
+                                                  int(defenseOption))
+            print(battleOutcome)
+            if battleOutcome[0] != 0:
+                attackOption = int(attackOption) - battleOutcome[0]
+            elif battleOutcome[1] != 0:
+                defenseOption = int(defenseOption) - battleOutcome[1]
+            elif battleOutcome[2] != 0:
+                attackOption = int(attackOption) - battleOutcome[2]
+                defenseOption = int(defenseOption) - battleOutcome[2]
 
+    if not pygame.mouse.get_pressed()[0]:
+        click_flag = False
 
     close_button = None
     if popup_visible:
         close_button = display_popup()
-        if(close_button.is_clicked()):
+        if close_button.is_clicked():
             battleResult = font.render("The Battle Results Are: ", True, (255, 255, 255))
             screen.blit(battleResult, (screen.get_width() / 3, 10))
             popup_visible = False
-
 
     pygame.draw.circle(screen, "red", player_pos, 40)
     keys = pygame.key.get_pressed()
