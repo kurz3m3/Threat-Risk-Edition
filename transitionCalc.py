@@ -42,14 +42,14 @@ def determine_outcomes(num_attack, num_defend):
     if len(defend_rolls) == 2:
         dice1, dice2 = defend_rolls
     else:
-        dice1 = defend_rolls
+        dice1 = defend_rolls[0]
 
     if len(attack_rolls) == 3:
         dice3, dice4, dice5 = attack_rolls
     elif len(attack_rolls) == 2:
         dice3, dice4 = attack_rolls
     else:
-        dice3 = attack_rolls
+        dice3 = attack_rolls[0]
 
     if len(defend_rolls) == 2 and len(attack_rolls) >= 2:
         if dice1 >= dice3 and dice2 >= dice4:

@@ -22,7 +22,8 @@ LIGHT_GREY = (200, 200, 200)
 RED = (255, 0, 0)
 # ball position
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-
+newAttacking = 0
+newDefending = 0
 
 def roll_dice(num_dice):
     die = [1, 2, 3, 4, 5, 6]
@@ -127,7 +128,7 @@ popup_visible = False
 
 # Function to display a pop-up
 def display_popup():
-    popup_width = 400
+    popup_width = 600
     popup_height = 200
     popup_x = (screen.get_width() // 2) - (popup_width // 2)
     popup_y = (screen.get_height() // 2) - (popup_height // 2)
@@ -142,7 +143,7 @@ def display_popup():
     screen.blit(popup_text_surface, popup_text_rect)
 
     # Render the result number
-    result_number = str(attackingList.selected) + " and " + str(defendingList.selected)
+    result_number = "Attackers #: " + str(newAttacking) + " and Defenders #: " + str(newDefending)
     result_number_surface = font.render(result_number, True, BLACK)
     result_number_rect = result_number_surface.get_rect(center=((screen.get_width() // 2), popup_y + 100))
     screen.blit(result_number_surface, result_number_rect)
@@ -208,16 +209,21 @@ while running:
             popup_visible = True
             attackOption = attackingList.option_list[attackingList.selected]
             defenseOption = defendingList.option_list[defendingList.selected]
-            battleOutcome = TC.determine_outcomes(int(attackOption),
-                                                  int(defenseOption))
+            battleOutcome = TC.determine_outcomes(int(attackOption), int(defenseOption))
             print(battleOutcome)
             if battleOutcome[0] != 0:
                 attackOption = int(attackOption) - battleOutcome[0]
+                newAttacking = attackOption
+                newDefending = defenseOption
             elif battleOutcome[1] != 0:
                 defenseOption = int(defenseOption) - battleOutcome[1]
+                newAttacking = attackOption
+                newDefending = defenseOption
             elif battleOutcome[2] != 0:
                 attackOption = int(attackOption) - battleOutcome[2]
                 defenseOption = int(defenseOption) - battleOutcome[2]
+                newAttacking = attackOption
+                newDefending = defenseOption
 
     if not pygame.mouse.get_pressed()[0]:
         click_flag = False
