@@ -4,7 +4,7 @@ import transitionCalc as TC
 
 # pygame setup
 pygame.init()
-# Get the current screen resolution
+# Get the current display resolution
 display_info = pygame.display.Info()
 screen_width = display_info.current_w
 screen_height = display_info.current_h
@@ -12,8 +12,9 @@ screen_height = display_info.current_h
 # Print screen resolution - useful for debugging
 print(f'Screen resolution: {screen_width}x{screen_height}')
 
-# Set the display mode to fill the screen but not full screen
+# Set the display mode to fill the screen but not full screen and include a window frame
 screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
+
 clock = pygame.time.Clock()
 running = True
 dt = 0
@@ -230,6 +231,8 @@ while running:
     event_list = pygame.event.get()
     for event in event_list:
         if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             running = False
 
     # fill the screen with a color to wipe away anything from last frame
