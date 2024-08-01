@@ -10,6 +10,56 @@ running = True
 dt = 0
 # window title
 pygame.display.set_caption('Threat: Risk Edition')
+title_font = pygame.font.Font(None, 48)  # Larger font for the title
+
+probabilities = {
+    "3V2 Attack Win": 0.3717,  # 37.17%
+    "3V2 Defense Win": 0.2926,  # 29.26%
+    "3V2 Tie": 0.3358,  # 33.58%
+    "3V1 Attack Win": 0.6597,  # 65.97%
+    "3V1 Defense Win": 0.3403,  # 34.03%
+    "2V2 Attack Win": 0.2276,  # 22.76%
+    "2V2 Defense Win": 0.4483,  # 44.83%
+    "2V2 Tie": 0.3241,  # 32.41%
+    "2V1 Attack Win": 0.5787,  # 57.87%
+    "2V1 Defense Win": 0.4213,  # 42.13%
+    "1V2 Attack Win": 0.2546,  # 25.46%
+    "1V2 Defense Win": 0.7454,  # 74.54%
+    "1V1 Attack Win": 0.4167,  # 41.67%
+    "1V1 Defense Win": 0.5833,  # 58.33%
+}
+scenarios = {
+    "3V2": ["3V2 Attack Win", "3V2 Defense Win", "3V2 Tie"],
+    "3V1": ["3V1 Attack Win", "3V1 Defense Win"],
+    "2V2": ["2V2 Attack Win", "2V2 Defense Win", "2V2 Tie"],
+    "2V1": ["2V1 Attack Win", "2V1 Defense Win"],
+    "1V2": ["1V2 Attack Win", "1V2 Defense Win"],
+    "1V1": ["1V1 Attack Win", "1V1 Defense Win"],
+}
+
+
+def prob_check(attack_num, defend_num):
+    scenario_key = f"{attack_num}V{defend_num}"
+    # Check if the scenario exists in the dictionary.
+    if scenario_key in scenarios:
+        # Get the list of probability events for the given scenario.
+        keys = scenarios[scenario_key]
+
+        # Create a dictionary of the probabilities for the given scenario.
+        result = {key: probabilities[key] for key in keys}
+
+        return result
+
+    # If the scenario does not exist, return an appropriate message.
+    return "Invalid scenario"
+
+
+# Function to convert probabilities to percentages
+def convert_to_percentages(prob_dict):
+    if isinstance(prob_dict, dict):
+        return {k: f"{v * 100:.2f}%" for k, v in prob_dict.items()}
+    return prob_dict
+
 
 # Setting up font and size
 font_size = 40
@@ -24,6 +74,7 @@ RED = (255, 0, 0)
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 newAttacking = 0
 newDefending = 0
+
 
 def roll_dice(num_dice):
     die = [1, 2, 3, 4, 5, 6]
@@ -203,7 +254,28 @@ while running:
 
     if ((attackingList.option_list[attackingList.selected] != "Attacking Army #") and (
             defendingList.option_list[defendingList.selected] != "Defending Army #")):
+        probabilities_display = convert_to_percentages(
+            prob_check(int(attackingList.option_list[attackingList.selected]),
+                       int(defendingList.option_list[
+                               defendingList.selected])))
         button.draw(screen)
+        # Display the title
+        title_surface = title_font.render("Probabilities:", True, (0, 0, 0))
+        title_rect = title_surface.get_rect(center=(screen.get_width() // 2, 30))
+        screen.blit(title_surface, title_rect)
+
+        # Display the probabilities
+        y_offset = 80  # Adjust this to position text below the title
+        if isinstance(probabilities_display, dict):
+            for key, percentage in probabilities_display.items():
+                text_surface = font.render(f"{key}: {percentage}", True, (0, 0, 0))
+                text_rect = text_surface.get_rect(center=(screen.get_width() // 2, y_offset))
+                screen.blit(text_surface, text_rect)
+                y_offset += 40
+        else:
+            text_surface = font.render(probabilities_display, True, (255, 0, 0))
+            text_rect = text_surface.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+            screen.blit(text_surface, text_rect)
         if button.is_clicked() and not click_flag:
             click_flag = True
             popup_visible = True
@@ -236,23 +308,7 @@ while running:
             screen.blit(battleResult, (screen.get_width() / 3, 10))
             popup_visible = False
 
-    pygame.draw.circle(screen, "red", player_pos, 40)
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player_pos.y -= 300 * dt
-    if keys[pygame.K_s]:
-        player_pos.y += 300 * dt
-    if keys[pygame.K_a]:
-        player_pos.x -= 300 * dt
-    if keys[pygame.K_d]:
-        player_pos.x += 300 * dt
-
     # flip() the display to put your work on screen
     pygame.display.flip()
-
-    # limits FPS to 60
-    # dt is delta time in seconds since last frame, used for framerate-
-    # independent physics.
-    dt = clock.tick(60) / 1000
 
 pygame.quit()
