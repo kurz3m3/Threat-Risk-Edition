@@ -4,7 +4,16 @@ import transitionCalc as TC
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+# Get the current screen resolution
+display_info = pygame.display.Info()
+screen_width = display_info.current_w
+screen_height = display_info.current_h
+
+# Print screen resolution - useful for debugging
+print(f'Screen resolution: {screen_width}x{screen_height}')
+
+# Set the display mode to fill the screen but not full screen
+screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
 clock = pygame.time.Clock()
 running = True
 dt = 0
@@ -249,7 +258,7 @@ while running:
     button_width = 200
     button_height = 50
     button_x = (screen.get_width() // 2) - (button_width // 2)
-    button_y = screen.get_height() - button_height - 10
+    button_y = screen.get_height() - button_height - 40
     button = Button(button_x, button_y, button_width, button_height, "BATTLE", font, BLACK, GREY, LIGHT_GREY)
 
     if ((attackingList.option_list[attackingList.selected] != "Attacking Army #") and (
