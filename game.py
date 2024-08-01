@@ -236,7 +236,19 @@ while running:
             running = False
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("aquamarine")
+    # Load the background image at its original resolution
+    background_image = pygame.image.load('Assets/sovietblurmap.png')
+
+    # Get the size of the screen
+    screen_width, screen_height = screen.get_size()
+
+    # Scale the image to fit the screen dimensions
+    background_image = pygame.transform.scale(background_image, (screen_width, screen_height))
+
+    # In the main loop, blit the background image
+    screen.blit(background_image, (0, 0))
+
+
     country_one = pygame.image.load('Assets/ColombiaImage.png')
     screen.blit(country_one, (0, 100))
     country_two = pygame.image.load('Assets/GhanaImage.png')
@@ -250,8 +262,8 @@ while running:
     defendingList.draw(screen)
 
     # Render the number onto a new Surface
-    attackText = font.render(attackingList.option_list[attackingList.selected], True, (255, 255, 255))  # White text
-    defendText = font.render(defendingList.option_list[defendingList.selected], True, (255, 255, 255))  # White text
+    attackText = font.render(attackingList.option_list[attackingList.selected], True, "black")  # Black text
+    defendText = font.render(defendingList.option_list[defendingList.selected], True, "black")  # Black text
     if attackingList.option_list[attackingList.selected] != "Attacking Army #":
         screen.blit(attackText, (350, 500))
     if defendingList.option_list[defendingList.selected] != "Defending Army #":
