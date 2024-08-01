@@ -11,6 +11,23 @@ dt = 0
 # window title
 pygame.display.set_caption('Threat: Risk Edition')
 
+probabilities = {
+    "3V2AW": 0.3717,  # 37.17%
+    "3V2DW": 0.2926,  # 29.26%
+    "3V2T": 0.3358,  # 33.58%
+    "3V1AW": 0.6597,  # 65.97%
+    "3V1DW": 0.3403,  # 34.03%
+    "2V2AW": 0.2276,  # 22.76%
+    "2V2DW": 0.4483,  # 44.83%
+    "2V2T": 0.3241,  # 32.41%
+    "2V1AW": 0.5787,  # 57.87%
+    "2V1DW": 0.4213,  # 42.13%
+    "1V2AW": 0.2546,  # 25.46%
+    "1V2DW": 0.7454,  # 74.54%
+    "1V1AW": 0.4167,  # 41.67%
+    "1V1DW": 0.5833,  # 58.33%
+}
+
 # Setting up font and size
 font_size = 40
 font = pygame.font.Font(None, font_size)  # None uses the default font
