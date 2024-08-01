@@ -304,8 +304,6 @@ while running:
     if popup_visible:
         close_button = display_popup()
         if close_button.is_clicked():
-            battleResult = font.render("The Battle Results Are: ", True, (255, 255, 255))
-            screen.blit(battleResult, (screen.get_width() / 3, 10))
             popup_visible = False
 
     # flip() the display to put your work on screen

@@ -59,7 +59,7 @@ def determine_outcomes(num_attack, num_defend):
         elif dice2 >= dice4 or dice1 >= dice3 and dice2 < dice4 or dice1 < dice3:
             tie += 1
 
-    elif len(defend_rolls) >= 1 and len(attack_rolls) == 1:
+    elif len(defend_rolls) == 1 and len(attack_rolls) >= 1:
         if dice1 >= dice3:
             defense_win += 1
         else:
@@ -120,7 +120,7 @@ for combination in combinations:
         team_A_wins += 1
 
 # Print the results
-print("Number of winning combinations for Team A:", team_A_wins)
-print("Number of winning combinations for Team D:", team_D_wins)
-print("Number of neutral combinations:", ties)
-print("Total combinations:", len(combinations))
+# print("Number of winning combinations for Team A:", team_A_wins)
+# print("Number of winning combinations for Team D:", team_D_wins)
+# print("Number of neutral combinations:", ties)
+# print("Total combinations:", len(combinations))
