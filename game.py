@@ -250,9 +250,16 @@ while running:
 
 
     country_one = pygame.image.load('Assets/ColombiaImage.png')
-    screen.blit(country_one, (0, 100))
+    # screen.blit(country_one, (0, 100))
+    country_one_x = 0
+    country_one_y = screen_height // 6
+    screen.blit(country_one, (country_one_x, country_one_y))
+
     country_two = pygame.image.load('Assets/GhanaImage.png')
-    screen.blit(country_two, (550, 100))
+    # screen.blit(country_two, (550, 100))
+    country_two_x = screen_width // 2
+    country_two_y = screen_height // 6
+    screen.blit(country_two, (country_two_x, country_two_y))
 
     # option box draw
     attack_selected_option = attackingList.update(event_list)
@@ -265,9 +272,9 @@ while running:
     attackText = font.render(attackingList.option_list[attackingList.selected], True, "black")  # Black text
     defendText = font.render(defendingList.option_list[defendingList.selected], True, "black")  # Black text
     if attackingList.option_list[attackingList.selected] != "Attacking Army #":
-        screen.blit(attackText, (350, 500))
+        screen.blit(attackText, (country_one.get_width() // 2, country_one.get_height() // 1.45))
     if defendingList.option_list[defendingList.selected] != "Defending Army #":
-        screen.blit(defendText, (900, 500))
+        screen.blit(defendText, (screen_width - country_two.get_width() // 2, country_two.get_height() - screen_height // 3))
 
     # Create button instance
     button_width = 200
