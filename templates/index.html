@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threat: Risk Edition</title>
+    <!-- Load Pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+</head>
+<body>
+    <h1>Risk Probabilities</h1>
+    <div id="output"></div>
+
+    <script type="text/javascript">
+        async function main() {
+            // Load Pyodide
+            const pyodide = await loadPyodide();
+
+            // Fetch the content of the Python game script
+            let response = await fetch('game.py');
+            let pyCode = await response.text();
+
+            // Run the Python code async
+            await pyodide.runPythonAsync(pyCode);
+
+            // Capture and display the output (if any)
+            const output = pyodide.runPython('sys.stdout.getvalue()');
+            document.getElementById('output').textContent = output;
+        }
+
+        main();
+    </script>
+</body>
+</html>
