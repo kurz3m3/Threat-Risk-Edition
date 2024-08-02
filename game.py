@@ -217,15 +217,36 @@ def display_popup():
     return close_button
 
 
+def calculate_option_positions(screen_width, screen_height):
+    attacking_x = int(screen_width * 0.05)  # 5% from the left
+    attacking_y = int(screen_height * 0.05)  # 5% from the top
+
+    defending_x = int(screen_width * 0.75)  # 75% from the left
+    defending_y = int(screen_height * 0.05)  # 5% from the top
+
+    return attacking_x, attacking_y, defending_x, defending_y
+
+
+# Initial setup
+screen_width, screen_height = screen.get_size()
+attacking_x, attacking_y, defending_x, defending_y = calculate_option_positions(screen_width, screen_height)
+
+# Use the calculated positions
 attackingList = OptionBox(
-    40, 40, 200, 40, (150, 150, 150), (100, 200, 255), pygame.font.SysFont(None, 30),
+    attacking_x, attacking_y, 200, 40, (150, 150, 150), (100, 200, 255), pygame.font.SysFont(None, 30),
     ["Attacking Army #", "1", "2", "3"])
+
 defendingList = OptionBox(
-    screen.get_width() - 250, 40, 200, 40, (150, 150, 150), (100, 200, 255), pygame.font.SysFont(None, 30),
+    defending_x, defending_y, 200, 40, (150, 150, 150), (100, 200, 255), pygame.font.SysFont(None, 30),
     ["Defending Army #", "1", "2"])
 
 click_flag = False
 while running:
+    screen_width, screen_height = screen.get_size()
+    attacking_x, attacking_y, defending_x, defending_y = calculate_option_positions(screen_width, screen_height)
+
+    attackingList.rect.topleft = (attacking_x, attacking_y)
+    defendingList.rect.topleft = (defending_x, defending_y)
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     event_list = pygame.event.get()
@@ -248,11 +269,17 @@ while running:
     # In the main loop, blit the background image
     screen.blit(background_image, (0, 0))
 
-
     country_one = pygame.image.load('Assets/ColombiaImage.png')
-    screen.blit(country_one, (0, 100))
+    # screen.blit(country_one, (0, 100))
+    country_one_x = 0
+    country_one_y = screen_height // 6
+    screen.blit(country_one, (country_one_x, country_one_y))
+
     country_two = pygame.image.load('Assets/GhanaImage.png')
-    screen.blit(country_two, (550, 100))
+    # screen.blit(country_two, (550, 100))
+    country_two_x = screen_width // 2
+    country_two_y = screen_height // 6
+    screen.blit(country_two, (country_two_x, country_two_y))
 
     # option box draw
     attack_selected_option = attackingList.update(event_list)
@@ -265,9 +292,10 @@ while running:
     attackText = font.render(attackingList.option_list[attackingList.selected], True, "black")  # Black text
     defendText = font.render(defendingList.option_list[defendingList.selected], True, "black")  # Black text
     if attackingList.option_list[attackingList.selected] != "Attacking Army #":
-        screen.blit(attackText, (350, 500))
+        screen.blit(attackText, (country_one.get_width() // 2, country_one.get_height() // 1.45))
     if defendingList.option_list[defendingList.selected] != "Defending Army #":
-        screen.blit(defendText, (900, 500))
+        screen.blit(defendText,
+                    (screen_width - country_two.get_width() // 2, country_two.get_height() - screen_height // 3))
 
     # Create button instance
     button_width = 200
